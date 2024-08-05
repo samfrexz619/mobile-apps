@@ -1,6 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { FlatList, StyleSheet, View, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  Alert,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import Header from './components/todo/header';
 import TodoItem from './components/todo/todoItem';
 import AddTodo from './components/todo/addTodo';
@@ -45,27 +53,32 @@ export default function App() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
-        <Header />
-        <View style={styles.content}>
-          <AddTodo submitTodoHandler={submitTodoHandler} />
-          <View style={styles.list}>
-            <FlatList
-              keyExtractor={(item) => item.id}
-              data={todos} renderItem={({ item: todo }) => (
-                <TodoItem todo={todo} pressHandler={pressHandler} />
-              )}
-            />
+    <SafeAreaView style={styles.safe}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.container}>
+          <Header />
+          <View style={styles.content}>
+            <AddTodo submitTodoHandler={submitTodoHandler} />
+            <View style={styles.list}>
+              <FlatList
+                keyExtractor={(item) => item.id}
+                data={todos} renderItem={({ item: todo }) => (
+                  <TodoItem todo={todo} pressHandler={pressHandler} />
+                )}
+              />
+            </View>
           </View>
+          <StatusBar style="auto" />
         </View>
-        <StatusBar style="auto" />
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safe: {
+    flex: 1
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

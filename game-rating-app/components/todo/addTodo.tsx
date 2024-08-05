@@ -1,4 +1,3 @@
-import { Todo } from '../types/todo';
 import React, { useState } from 'react';
 import { Text, StyleSheet, TextInput, View, Pressable } from 'react-native';
 

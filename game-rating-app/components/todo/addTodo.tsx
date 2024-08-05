@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Text, StyleSheet, TextInput, View, Pressable } from 'react-native';
 
 
@@ -10,19 +10,22 @@ const AddTodo: React.FC<Props> = ({ submitTodoHandler }) => {
 
   const [text, setText] = useState('');
 
+  const inputRef = useRef<TextInput>(null)
+
   const changeHandler = (val: string) => {
     setText(val)
   }
 
   const submitHandler = (text: string) => {
     submitTodoHandler(text)
-    setText('')
+    inputRef.current?.clear()
   }
 
   return (
     <View>
       <TextInput
         style={styles.input}
+        ref={inputRef}
         placeholder='new todo...'
         onChangeText={changeHandler}
       />

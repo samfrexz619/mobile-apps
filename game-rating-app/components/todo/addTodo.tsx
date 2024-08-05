@@ -1,20 +1,18 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Text, StyleSheet, TextInput, View, Pressable } from 'react-native';
 
 
 interface Props {
   submitTodoHandler: (todo: string) => void;
+  changeHandler: (val: string) => void;
+  text: string;
+  editingId: string | null;
 }
 
-const AddTodo: React.FC<Props> = ({ submitTodoHandler }) => {
+const AddTodo: React.FC<Props> = ({ submitTodoHandler, changeHandler, text, editingId }) => {
 
-  const [text, setText] = useState('');
 
   const inputRef = useRef<TextInput>(null)
-
-  const changeHandler = (val: string) => {
-    setText(val)
-  }
 
   const submitHandler = (text: string) => {
     submitTodoHandler(text)
@@ -28,10 +26,20 @@ const AddTodo: React.FC<Props> = ({ submitTodoHandler }) => {
         ref={inputRef}
         placeholder='new todo...'
         onChangeText={changeHandler}
+        multiline
+        editable={true}
+        keyboardType='default'
+        inputMode='text'
       />
-      <Pressable style={styles.btn} onPress={() => submitHandler(text)}>
+      {!editingId ? <Pressable style={styles.btn} onPress={() => submitHandler(text)}>
         <Text style={styles.btnText}>Add Todo</Text>
       </Pressable>
+        : (
+          <Pressable style={styles.btn} onPress={() => submitHandler(text)}>
+            <Text style={styles.btnText}>Update Todo</Text>
+          </Pressable>
+        )
+      }
     </View>
   );
 }
@@ -40,9 +48,10 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 10,
     paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
+    paddingVertical: 12,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 10
   },
   btn: {
     padding: 14,

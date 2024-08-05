@@ -7,11 +7,15 @@ import {
   Alert,
   SafeAreaView,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Text,
+  TextInput,
 } from 'react-native';
 import Header from './components/todo/header';
 import TodoItem from './components/todo/todoItem';
 import AddTodo from './components/todo/addTodo';
+import EditTodo from './components/todo/editTodo';
+import { Todo } from './components/types/todo';
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -28,6 +32,9 @@ export default function App() {
       id: '3'
     },
   ]);
+
+  const [text, setText] = useState('');
+  const [editingId, setEditingId] = useState<string | null>('');
 
   const pressHandler = (id: string) => {
     setTodos(prev => prev.filter(todo => todo.id !== id))
@@ -52,20 +59,64 @@ export default function App() {
     }
   }
 
+  const changeHandler = (val: string) => {
+    setText(val)
+  }
+
+  const pressEditHandler = (id: string) => {
+    setEditingId(id)
+  }
+
+  const saveEditedTodo = (editTodo: Todo) => {
+    const editedTodo = todos.map(todo => todo.id === editTodo.id ? {
+      ...todo,
+      text: editTodo.text
+    } : todo)
+    setTodos(editedTodo)
+    setEditingId(null)
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <Header />
           <View style={styles.content}>
-            <AddTodo submitTodoHandler={submitTodoHandler} />
+            <AddTodo
+              submitTodoHandler={submitTodoHandler}
+              changeHandler={changeHandler}
+              text={text}
+              editingId={editingId}
+            />
             <View style={styles.list}>
-              <FlatList
-                keyExtractor={(item) => item.id}
-                data={todos} renderItem={({ item: todo }) => (
-                  <TodoItem todo={todo} pressHandler={pressHandler} />
-                )}
-              />
+              {todos.length > 0 ?
+                <FlatList
+                  keyExtractor={(item) => item.id}
+                  data={todos}
+                  renderItem={({ item: todo }) => (
+                    <>
+                      {editingId === todo.id ?
+                        (<EditTodo
+                          initialText={todo.text}
+                          todoId={todo.id}
+                          saveEditedTodo={saveEditedTodo}
+                        />)
+                        :
+                        <TodoItem
+                          todo={todo}
+                          pressHandler={pressHandler}
+                          pressEditHandler={pressEditHandler}
+                        />
+                      }
+                    </>
+                  )}
+                />
+                : (
+                  <View style={styles.empty}>
+                    <Text style={styles.emptyTxt}>Todo is empty</Text>
+                  </View>
+                )
+              }
             </View>
           </View>
           <StatusBar style="auto" />
@@ -77,7 +128,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   safe: {
-    flex: 1
+    flex: 1,
+    // backgroundColor: '#fff'
   },
   container: {
     flex: 1,
@@ -85,8 +137,21 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 40,
+    flex: 1,
   },
   list: {
-    marginTop: 20
-  }
+    marginTop: 20,
+    flex: 1,
+    // backgroundColor: '#f1f1f1'
+  },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyTxt: {
+    color: '#ff0000',
+    fontWeight: 'bold',
+    fontSize: 30
+  },
 });

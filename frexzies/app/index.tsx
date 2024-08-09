@@ -1,4 +1,4 @@
-import { router, Redirect } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -6,9 +6,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { images } from '../constants';
 import CustomBtn from '../components/CustomBtn';
+import { useGlobalContext } from '../context/GlobalContext';
 
 
 export default function App() {
+
+  const { isLoggedIn, loading } = useGlobalContext()
   return (
     <SafeAreaView className='bg-primary h-full'>
       <ScrollView contentContainerStyle={{ height: '100%' }}>

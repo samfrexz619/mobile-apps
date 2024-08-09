@@ -7,13 +7,14 @@ import React, {
   useState
 } from "react";
 import { getCurrentUser } from "../lib/appwrite";
+import { Models } from "react-native-appwrite";
 
 interface ContextProps {
-  user: User | null;
+  user: Models.Document | null;
   loading: boolean;
   isLoggedIn: boolean;
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-  setUser: Dispatch<SetStateAction<null>>;
+  setUser: Dispatch<SetStateAction<null | Models.Document>>;
 }
 
 export const GlobalContext = createContext<ContextProps>({
@@ -27,7 +28,7 @@ export const GlobalContext = createContext<ContextProps>({
 export const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<Models.Document | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

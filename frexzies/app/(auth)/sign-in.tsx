@@ -7,11 +7,12 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomBtn from '../../components/CustomBtn';
 import { Link, router } from 'expo-router';
-import { logIn } from '../../lib/appwrite';
+import { getCurrentUser, logIn } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalContext';
 
 
 const SignIn = () => {
-
+  const { setUser, setIsLoggedIn } = useGlobalContext();
   const [form, setForm] = useState({
     email: '',
     password: ''
@@ -24,8 +25,13 @@ const SignIn = () => {
       Alert.alert('Error!', 'Please fill all fields')
     }
     setIsSubmitting(true)
+
     try {
       await logIn(form)
+      const res = await getCurrentUser()
+      setUser(res!)
+      setIsLoggedIn(true)
+      Alert.alert("Success", "User signed in successfully");
       router.replace('/home')
     } catch (error: any) {
       console.log(error.message)

@@ -8,6 +8,7 @@ import FormField from '../../components/FormField';
 import CustomBtn from '../../components/CustomBtn';
 import { Link, router } from 'expo-router';
 import { createUser } from '../../lib/appwrite';
+import { useGlobalContext } from '../../context/GlobalContext';
 
 
 const SignUp = () => {
@@ -19,6 +20,7 @@ const SignUp = () => {
   })
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { setIsLoggedIn, setUser } = useGlobalContext();
 
   const submitHandler = async () => {
     if (!form.username.trim() || !form.email.trim() || !form.password) {
@@ -27,7 +29,9 @@ const SignUp = () => {
     setIsSubmitting(true)
     try {
       const res = await createUser(form)
-      router.replace('/home')
+      setUser(res)
+      setIsLoggedIn(true)
+      router.replace('/home');
     } catch (error: any) {
       Alert.alert('Error!', error.message)
     } finally {

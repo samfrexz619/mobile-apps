@@ -6,26 +6,27 @@ import { GlobalContextProvider } from '../../context/GlobalContext'
 
 const AuthLayout = () => {
   return (
-    <GlobalContextProvider>
-      <Stack>
-        <Stack.Screen
-          name='sign-in'
-          options={{
-            headerShown: false
-          }}
-        />
-        <Stack.Screen
-          name='sign-up'
-          options={{
-            headerShown: false
-          }}
-        />
-        <StatusBar backgroundColor='#161622' style='light' />
-      </Stack>
-    </GlobalContextProvider>
+    <>
+      <GlobalContextProvider>
+        <Stack>
+          <Stack.Screen
+            name='sign-in'
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name='sign-up'
+            options={{
+              headerShown: false
+            }}
+          />
+          <StatusBar backgroundColor='#161622' style='light' />
+        </Stack>
+      </GlobalContextProvider>
+    </>
   )
 }
 
-export default AuthLayout
+export default AuthLayout;
 
-const styles = StyleSheet.create({})

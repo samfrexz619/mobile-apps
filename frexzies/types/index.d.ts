@@ -3,3 +3,9 @@ declare type User = {
   email: string;
   password: string;
 }
+
+declare type Posts = {
+  $id: string;
+  title: string;
+  $updatedAt: string;
+}

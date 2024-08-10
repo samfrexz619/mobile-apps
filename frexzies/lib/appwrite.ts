@@ -10,11 +10,21 @@ export const config = {
   storageId: '66b5a8d30015c2891944',
 }
 
+const {
+  enpoint,
+  platform,
+  projectId,
+  databaseId,
+  userCollectionId,
+  videoCollectionId,
+  storageId
+} = config;
+
 const client = new Client();
 client
-  .setEndpoint(config.enpoint)
-  .setProject(config.projectId)
-  .setPlatform(config.platform);
+  .setEndpoint(enpoint)
+  .setProject(projectId)
+  .setPlatform(platform);
 
 const account = new Account(client);
 const avatars = new Avatars(client);
@@ -34,11 +44,11 @@ export const createUser = async (user: User) => {
 
     const avatarUrl = avatars.getInitials(username)
 
-    await logIn(user)
+    await signIn(user)
 
     const newUser = await databases.createDocument(
-      config.databaseId,
-      config.userCollectionId,
+      databaseId,
+      userCollectionId,
       ID.unique(),
       {
         accountId: newAccount.$id,
@@ -55,7 +65,7 @@ export const createUser = async (user: User) => {
   }
 }
 
-export const logIn = async (user: User) => {
+export const signIn = async (user: User) => {
   const { email, password } = user
   try {
     // account.deleteSession('current')
@@ -71,8 +81,8 @@ export const getCurrentUser = async () => {
     const currentAccount = await account.get()
     if (!currentAccount) throw Error;
     const currentUser = await databases.listDocuments(
-      config.databaseId,
-      config.userCollectionId,
+      databaseId,
+      userCollectionId,
       [Query.equal('accountId', currentAccount.$id)]
     );
     if (!currentUser) throw Error;
@@ -80,5 +90,17 @@ export const getCurrentUser = async () => {
     return currentUser.documents[0]
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const getAllPosts = async () => {
+  try {
+    const posts = await databases.listDocuments(
+      databaseId,
+      videoCollectionId
+    )
+    return posts.documents
+  } catch (error: any) {
+    throw new Error(error)
   }
 }

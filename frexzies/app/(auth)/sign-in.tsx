@@ -7,7 +7,7 @@ import { images } from '../../constants';
 import FormField from '../../components/FormField';
 import CustomBtn from '../../components/CustomBtn';
 import { Link, router } from 'expo-router';
-import { getCurrentUser, logIn } from '../../lib/appwrite';
+import { getCurrentUser, signIn } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalContext';
 
 
@@ -24,21 +24,22 @@ const SignIn = () => {
     if (form.email.trim() === '' || form.password === '') {
       Alert.alert('Error!', 'Please fill all fields')
     }
-    setIsSubmitting(true)
+    router.replace('/home')
+    // setIsSubmitting(true)
 
-    try {
-      await logIn(form)
-      const res = await getCurrentUser()
-      setUser(res!)
-      setIsLoggedIn(true)
-      Alert.alert("Success", "User signed in successfully");
-      router.replace('/home')
-    } catch (error: any) {
-      console.log(error.message)
-      Alert.alert('Error!', error.message)
-    } finally {
-      setIsSubmitting(false)
-    }
+    // try {
+    //   await signIn(form)
+    //   const res = await getCurrentUser()
+    //   setUser(res!)
+    //   setIsLoggedIn(true)
+    //   Alert.alert("Success", "User signed in successfully");
+    //   router.replace('/home')
+    // } catch (error: any) {
+    //   console.log(error.message)
+    //   Alert.alert('Error!', error.message)
+    // } finally {
+    //   setIsSubmitting(false)
+    // }
   }
 
   return (
